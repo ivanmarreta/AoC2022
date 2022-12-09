@@ -29,6 +29,13 @@ public class Day1 {
         
         Integer part1Result = Collections.max(totalCalories);
         System.out.println(part1Result);
+
+        totalCalories.sort(Collections.reverseOrder());
+
+        int part2Result = totalCalories.stream()
+                .limit(3)
+                .reduce(0, Integer::sum);
+        System.out.println(part2Result);
     }
 
 }
