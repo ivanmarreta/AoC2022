@@ -10,21 +10,12 @@ public class Day4 {
 
     public static void main(String[] args) throws IOException {
 
-        String input = """
-                2-4,6-8
-                2-3,4-5
-                5-7,7-9
-                2-8,3-7
-                6-6,4-6
-                2-6,4-8
-                """;
-
         int fullyContain = 0;
+        int noRangesOverlaps = 0;
 
         String fileName = "inputs/day4.txt";
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
             List<String> lines = stream.toList();
-//            String[] lines = input.split("\n");
             for (String line : lines) {
                 final String[] pairs = line.split(",");
 
@@ -42,10 +33,19 @@ public class Day4 {
                     fullyContain++;
                 }
 
+                if (pair1StartSession > pair2EndSession
+                    || pair2StartSession > pair1EndSession) {
+                    noRangesOverlaps++;
+                }
+
             }
 
             //PART 1
             System.out.println(fullyContain);
+
+            //PART 2
+            int rangesOverlap = lines.size() - noRangesOverlaps;
+            System.out.println(rangesOverlap);
         }
     }
 }
