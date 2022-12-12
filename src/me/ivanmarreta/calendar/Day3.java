@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Day3 {
@@ -21,20 +23,26 @@ public class Day3 {
 
         final String[] charactersOrdered = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-        LinkedList<String> linkedList = new LinkedList<String>();
-        Collections.addAll(linkedList, charactersOrdered);
+        LinkedList<String> charactersOrderedList = new LinkedList<String>();
+        Collections.addAll(charactersOrderedList, charactersOrdered);
 
-        int part1 = 0;
+        int part1Result = 0;
+        int part2Result = 0;
 
         String fileName = "inputs/day3.txt";
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
-            for (String line : stream.toList()) {
-//            for (String line : input.split("\n")) {
+            List<String> lines = stream.toList();
+            LinkedList<int[]> lineCharacterList = new LinkedList<int[]>();
+
+//            List<String> lines = Arrays.asList(input.split("\n"));
+            for (String line : lines) {
                 int[] lineCharValues = new int[line.length()];
                 String[] lineChars = line.split("");
                 for (int i = 0; i < lineChars.length; i++) {
-                    lineCharValues[i] = linkedList.indexOf(lineChars[i]);
+                    lineCharValues[i] = charactersOrderedList.indexOf(lineChars[i]);
                 }
+
+                lineCharacterList.add(lineCharValues);
 
                 int half = line.length() / 2;
                 int[] compartmentOne = Arrays.copyOfRange(lineCharValues, 0, half);
@@ -48,10 +56,36 @@ public class Day3 {
                         }
                     }
                 }
-                part1 += duplicates.stream().reduce(Integer::sum).get();
+                part1Result += duplicates.stream().reduce(Integer::sum).get();
             }
-        }
 
-        System.out.println(part1);
+            System.out.println(part1Result);
+
+            final AtomicInteger counter = new AtomicInteger();
+            List<List<int[]>> listPartition =
+                    lineCharacterList.stream()
+                            .collect(Collectors.groupingBy(it -> counter.getAndIncrement() / 3))
+                            .values().stream().toList();
+
+            for (List<int[]> partition : listPartition) {
+                int[] lineOne = partition.get(0);
+                int[] lineTwo = partition.get(1);
+                int[] lineThree = partition.get(2);
+
+                Set<Integer> duplicates = new HashSet<>();
+                for (int k = 0; k < lineOne.length; k++) {
+                    for (int j = 0; j < lineTwo.length; j++) {
+                        for (int t = 0; t < lineThree.length; t++) {
+                            if (lineOne[k] == lineTwo[j] && lineTwo[j] == lineThree[t]) {
+                                duplicates.add(lineOne[k]);
+                            }
+                        }
+                    }
+                }
+                part2Result += duplicates.stream().reduce(Integer::sum).get();
+            }
+
+            System.out.println(part2Result);
+        }
     }
 }
