@@ -12,18 +12,9 @@ public class Day3 {
 
     public static void main(String[] args) throws IOException {
 
-        String input = """
-                vJrwpWtwJgWrhcsFMMfFFhFp
-                jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
-                PmmdzqPrVvPwwTWBwg
-                wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
-                ttgJtRGJQctTZtZT
-                CrZsJsPPZsGzwwsLwLmpwMDw
-                """;
-
         final String[] charactersOrdered = "_abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-        LinkedList<String> charactersOrderedList = new LinkedList<String>();
+        LinkedList<String> charactersOrderedList = new LinkedList<>();
         Collections.addAll(charactersOrderedList, charactersOrdered);
 
         int part1Result = 0;
@@ -32,9 +23,8 @@ public class Day3 {
         String fileName = "inputs/day3.txt";
         try (Stream<String> stream = Files.lines(Paths.get(fileName))) {
             List<String> lines = stream.toList();
-            LinkedList<int[]> lineCharacterList = new LinkedList<int[]>();
+            LinkedList<int[]> lineCharacterList = new LinkedList<>();
 
-//            List<String> lines = Arrays.asList(input.split("\n"));
             for (String line : lines) {
                 int[] lineCharValues = new int[line.length()];
                 String[] lineChars = line.split("");
